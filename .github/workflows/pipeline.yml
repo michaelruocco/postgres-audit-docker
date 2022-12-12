@@ -15,9 +15,6 @@ jobs:
          - IMAGE: michaelruocco/postgres-audit:main
            CONTEXT: main
            PLATFORMS: linux/amd64
-         - IMAGE: michaelruocco/postgres-audit:alpine
-           CONTEXT: alpine
-           PLATFORMS: linux/amd64
 
     steps:
     - name: Set up Docker Buildx
