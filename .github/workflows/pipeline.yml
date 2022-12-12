@@ -1,0 +1,40 @@
+name: pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+       versions:
+         - IMAGE: michaelruocco/postgres-audit:main
+           CONTEXT: main
+           PLATFORMS: linux/amd64
+         - IMAGE: michaelruocco/postgres-audit:alpine
+           CONTEXT: alpine
+           PLATFORMS: linux/amd64
+
+    steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Checkout sources
+      uses: actions/checkout@main
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Image
+      run: docker buildx build --tag ${{ matrix.versions.IMAGE }} --load ${{ matrix.versions.CONTEXT }}
+
+    - name: Publish Image
+      run: docker buildx build --tag ${{ matrix.versions.IMAGE }} --platform ${{ matrix.versions.PLATFORMS }} --push ${{ matrix.versions.CONTEXT }}
+
