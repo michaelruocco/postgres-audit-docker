@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
        versions:
-         - IMAGE: michaelruocco/postgres-audit:main
+         - IMAGE: michaelruocco/postgres-audit:latest
            CONTEXT: main
            PLATFORMS: linux/amd64
 
